@@ -1,0 +1,23 @@
+{
+  "name": "chat-monorepo",
+  "version": "1.0.0",
+  "description": "Chat application monorepo with backend and frontend",
+  "private": true,
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces",
+    "start": "npm run start --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "backend:dev": "npm run start:dev -w packages/backend",
+    "backend:build": "npm run build -w packages/backend",
+    "backend:start": "npm run start:prod -w packages/backend",
+    "frontend:dev": "npm run dev -w packages/frontend",
+    "frontend:build": "npm run build -w packages/frontend"
+  }
+}
