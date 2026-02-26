@@ -14,12 +14,14 @@ export class ChatGateWay implements OnGatewayConnection, OnGatewayDisconnect {
         const username = client.handshake.query.username as string
         this.usernames.set(client.id, username || 'Anonymous')
         console.log(`User "${username}" connected: ${client.id}`)
+        client.broadcast.emit('userConnected', { user: username || 'Anonymous' })
     }
     
     handleDisconnect(client: Socket) {
         const username = this.usernames.get(client.id)
         this.usernames.delete(client.id)
         console.log(`User "${username}" disconnected: ${client.id}`)
+        this.server.emit('userDisconnected', { user: username || 'Anonymous' })
     }
 
     @SubscribeMessage('sendMessage')

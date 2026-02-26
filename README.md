@@ -29,7 +29,8 @@ npm install
 ### Development
 
 ```bash
-# Run backend and frontend in development mode
+# Run backend and frontend in development mode, using npm-run-all for running scripts in parallel
+
 npm run dev
 
 # Or run individually:

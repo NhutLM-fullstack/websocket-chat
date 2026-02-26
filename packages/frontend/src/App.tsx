@@ -4,7 +4,7 @@ import './App.css'
 
 function App() {
   const [socket, setSocket] = useState<Socket | null>(null)
-  const [messages, setMessages] = useState<Array<{ user: string; message: string }>>([])
+  const [messages, setMessages] = useState<Array<{ user: string; message: string; type?: 'message' | 'system' }>>([])
   const [input, setInput] = useState('')
   const [username, setUsername] = useState('')
   const [isConnected, setIsConnected] = useState(false)
@@ -14,11 +14,21 @@ function App() {
     if (!username || !socket) return
 
     socket.on('newMessage', (data: { user: string; message: string }) => {
-      setMessages((prev) => [...prev, data])
+      setMessages((prev) => [...prev, { ...data, type: 'message' }])
+    })
+
+    socket.on('userConnected', (data: { user: string }) => {
+      setMessages((prev) => [...prev, { user: 'System', message: `${data.user} joined the chat`, type: 'system' }])
+    })
+
+    socket.on('userDisconnected', (data: { user: string }) => {
+      setMessages((prev) => [...prev, { user: 'System', message: `${data.user} left the chat`, type: 'system' }])
     })
 
     return () => {
       socket.off('newMessage')
+      socket.off('userConnected')
+      socket.off('userDisconnected')
     }
   }, [socket, username])
 
@@ -79,7 +89,7 @@ function App() {
           <div className="empty-state">No messages yet</div>
         ) : (
           messages.map((msg, index) => (
-            <div key={index} className="message">
+            <div key={index} className={`message ${msg.type === 'system' ? 'system-message' : ''}`}>
               <span className="message-user">{msg.user}:</span>
               <span className="message-text">{msg.message}</span>
             </div>
